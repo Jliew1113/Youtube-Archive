@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<a target="_blank" href="{{channel.channel_url}}">
+    <img style="display: block; margin-left: auto; margin-right: auto; border-radius: 50%;" src="{{channel.channel_thumbnail}}" width="480" height="480">
+</a>
+  <h1><strong>{{ channel.channel_title }}</strong></h1>
+  <p><strong style="color:#8167a9;">Description:</strong><br> {{ channel.channel_description }}</p>
+  <p><strong style="color:#8167a9;">Subscribers:</strong> {{ channel.channel_subscribers }}</p>
+
+  <div style="list-style-type:none; margin-left:20px;margin-top:30px">
+    <h2 >Videos:</h2>
+    {% for copy in channel.video_set.all %}
+        <li>
+        <a id="thumbnail" href="{{copy.get_absolute_url}}"><img style="border-radius:5%" src="{{copy.video_thumbnail}}" width="426" height="240"></a><a style="padding-left:15px; color:#FFFFFF" href="{{ copy.get_absolute_url }}"><strong>{{ copy.video_title }}</strong></a> 
+        <p> </p> 
+      </li>
+    {% endfor %}
+  </div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<h1 style="padding-right:240px; color:#8167a9">Search Results <small>for</small> "<i>{{ key }}</i>"</h1>
+  {% if channel_list %}
+  <style>
+      ul {
+        columns: 2;
+        -webkit-columns: 2;
+        -moz-columns: 2;
+      }
+      img{
+        border-radius: 50%;
+      }
+    </style>
+  <p style="padding-right:240px;">{{channel_list_len}} Results (Runtime: {{time_elapsed|floatformat:15}} seconds)</p><br>
+  <ul style="list-style-type:none;">
+    {% for channel in channel_list %}
+      <li>
+        <a id="thumbnail" href="{{channel.get_absolute_url}}"><img src="{{channel.channel_thumbnail}}" width="240" height="240"></a><a style="padding-left:10px; color:#FFFFFF" href="{{ channel.get_absolute_url }}"><strong>    {{ channel.channel_title }}</strong></a> 
+        <p> </p>  
+      </li>
+    {% endfor %}
+  </ul>
+  
+  <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+        {% if channel_list.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ channel_list.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if channel_list.number|add:'-4' > 1 %}
+            <li class="page-item">
+            <a class="page-link" href="?page=1">1</a>
+            </li>
+            {% if channel_list.number|add:'-5' > 1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ channel_list.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% for i in channel_list.paginator.page_range %}
+            {% if channel_list.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > channel_list.number|add:'-5' and i < channel_list.number|add:'5' %}
+                 <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if channel_list.paginator.num_pages > channel_list.number|add:'4' %}
+          {% if channel_list.paginator.num_pages > channel_list.number|add:'5' %}
+           <li class="page-item"><a class="page-link" href="?page={{ channel_list.number|add:'5' }}">&hellip;</a></li>
+           {% endif %}
+           <li class="page-item">
+            <a class="page-link" href="?page={{ channel_list.paginator.num_pages }}">{{ channel_list.paginator.num_pages }}</a>
+            </li>
+        {% endif %}
+
+        {% if channel_list.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="?page={{ channel_list.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+          </li>
+        {% endif %}
+        <form class="form-inline" id="page" method="get">
+            <input style="position:relative; left:10px" class="form-control mb-2 mr-sm-2" name="page" id='skip' type="number" maxlength="5" size=2 placeholder="Skip to..." min="1" max="{{channel_list.paginator.num_pages}}">
+            <label class="form-label" style="position:relative; left:7px; bottom:2px" for="skip">page</label>
+        </form>
+      </ul>
+    </nav>
+  {% else %}
+    <p>No Result. (Runtime: {{time_elapsed|floatformat:15}} seconds)</p>
+  {% endif %}
+{% endblock %}

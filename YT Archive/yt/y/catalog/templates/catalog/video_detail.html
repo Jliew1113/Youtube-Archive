@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<style type='text/css'>
+  H1 { text-align: left}
+  P { text-align: left}
+  img {
+  border-radius: 5%
+}
+</style>
+<a target="_blank" href="{{video.video_url}}">
+    <img src="{{video.video_thumbnail}}" width="720" height="480">
+</a><br>
+  <h1>{{ video.video_title }}</h1><br>
+  <h3><a id="thumbnail" href="{{video.channel.get_absolute_url}}"><img style="border-radius:50%" src="{{video.channel.channel_thumbnail}}" width="240" height="240"></a><a style="padding-left:10px; color:#8167a9" href="{{ video.channel.get_absolute_url }}"><strong>    {{ video.channel.channel_title }}</strong></a> </h3><br>
+  <p><strong style="color:#8167a9;">Description:</strong><br> {{ video.video_description }}</p><br>
+  <p><strong style="color:#8167a9;">Date Published:</strong> {{ video.video_date }}</p>
+  <p><strong style="color:#8167a9;">Views:</strong> {{ video.video_views }}</p>
+  <p><strong style="color:#8167a9;">Likes:</strong> {{ video.video_likes }}</p>
+  <p><strong style="color:#8167a9;">Dislikes:</strong> {{ video.video_dislikes }}</p><br>
+  <p><strong style="color:#8167a9;">Comments:</strong><br> {{ video.video_comments }}</p><br>
+{% endblock %}
+

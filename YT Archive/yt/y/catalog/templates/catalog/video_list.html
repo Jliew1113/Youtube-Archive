@@ -1,0 +1,25 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<style>
+img {
+  border-radius: 5%
+}
+</style>
+  <h1 style="color:#8167a9; text-align:left; padding-left:40px;">Video List</h1>
+  {% if video_list %}
+  <h5 style="text-align:left; padding-left:50px;">6055 videos</h5>
+  <ul style="list-style-type:none;">
+    {% for video in video_list %}
+      <li>
+        <a id="thumbnail" href="{{video.get_absolute_url}}"><img src="{{video.video_thumbnail}}" width="426" height="240"></a><a style="padding-left:10px; color:#FFFFFF" href="{{ video.get_absolute_url }}"><strong>{{ video.video_title }}</strong></a> 
+        <p> </p> 
+      </li>
+    {% endfor %}
+  </ul>
+
+  {% else %}
+    <p>There are no videos in the archive.</p>
+  {% endif %}
+  
+{% endblock %}

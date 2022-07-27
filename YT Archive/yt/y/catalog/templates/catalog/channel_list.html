@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+{% block content %}
+  <h1 style="padding-right:240px; color:#8167a9">Channel List</h1>
+  {% if channel_list %}
+  <h5 style="text-align:center; padding-right:240px;">3353 channels</h5>
+  <style>
+      ul {
+        columns: 2;
+        -webkit-columns: 2;
+        -moz-columns: 2;
+      }
+      img{
+        border-radius: 50%;
+      }
+    </style>
+  <ul style="list-style-type:none;">
+    {% for channel in channel_list %}
+      <li>
+        <a id="thumbnail" href="{{channel.get_absolute_url}}"><img src="{{channel.channel_thumbnail}}" width="240" height="240"></a><a style="padding-left:10px; color:#FFFFFF" href="{{ channel.get_absolute_url }}"><strong>    {{ channel.channel_title }}</strong></a> 
+        <p> </p> 
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>There are no channels in the archive.</p>
+  {% endif %}
+  
+{% endblock %}

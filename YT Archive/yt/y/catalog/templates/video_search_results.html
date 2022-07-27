@@ -1,0 +1,77 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1 style="color:#8167a9; text-align:left; padding-left:40px;">Search Results <small>for</small> "<i>{{ key }}</i>"</h1>
+  {% if video_list %}
+  <p style="text-align:left; padding-left:40px;">{{video_list_len}} results (Runtime: {{time_elapsed|floatformat:15}} seconds)</p><br>
+  <ul style="list-style-type:none;">
+    {% for video in video_list %}
+      <li>
+        <a id="thumbnail" href="{{video.get_absolute_url}}"><img src="{{video.video_thumbnail}}" width="426" height="240"></a><a style="padding-left:10px; color:#FFFFFF" href="{{ video.get_absolute_url }}"><strong>    {{ video.video_title }}</strong></a> 
+        <p> </p> 
+      </li>
+    {% endfor %}
+  </ul>
+  
+  <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+        {% if video_list.has_previous %}
+            <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ video_list.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if video_list.number|add:'-4' > 1 %}
+            <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page=1">1</a>
+          </li>
+          {% if video_list.number|add:'-5' > 1 %}
+            <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ video_list.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% for i in video_list.paginator.page_range %}
+            {% if video_list.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > video_list.number|add:'-5' and i < video_list.number|add:'5' %}
+                 <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if video_list.paginator.num_pages > video_list.number|add:'4' %}
+        {% if video_list.paginator.num_pages > video_list.number|add:'5'%}
+           <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ video_list.number|add:'5' }}">&hellip;</a></li>
+           {% endif %}
+           <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ video_list.paginator.num_pages }}">{{ video_list.paginator.num_pages }}</a>
+          </li>
+        {% endif %}
+
+        {% if video_list.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ video_list.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+          </li>
+        {% endif %}
+        <form class="form-inline" id="page" method="get">
+            <input style="position:relative; left:10px" class="form-control mb-2 mr-sm-2" name="page" id='skip' type="number" maxlength="5" size=2 placeholder="Skip to..." min="1" max="{{video_list.paginator.num_pages}}">
+            <label class="form-label" style="position:relative; left:7px; bottom:2px" for="skip">page</label>
+        </form>
+      </ul>
+    </nav>
+  {% else %}
+    <p>No Result. (Runtime: {{time_elapsed|floatformat:15}} seconds)</p>
+  {% endif %}
+{% endblock %}

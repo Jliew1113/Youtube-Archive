@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<style>
+body {
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+</style>
+  <p></p>
+  <h1 style="color: #FFF29D">Welcome to YT Videos Archive!</h1>
+  <p><strong>Content</strong></p>
+  <p>The archive has the following record counts:</p><br>
+  <ul style="list-style-type:none; text-align:center ">
+    <li><a style="color:white" href="{% url 'videos' %}"><strong>Videos: </strong></a> {{ num_video }}</li>
+    <li><a style="color:white" href="{% url 'channels' %}"><strong>Channels: </strong></a> {{ num_channel }}</li>
+  </ul>
+  <br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <p>This website is solely for academic purposes. Please support original content creators.</p>
+
+{% endblock %}
+

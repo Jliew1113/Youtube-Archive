@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block title %}<title>YT Videos Archive</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'catalog/styles.css' %}">
+</head>
+<body class="dark">
+<style>
+ a:hover{text-decoration: none;} 
+</style>
+<div class="navigation-wrap bg-light start-header start-style">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<nav class="navbar navbar-expand-md navbar-light">
+					
+						<a class="navbar-brand" href="{% url "index" %}" target="_blank" style="color: #FFF29D"><strong>YT Videos Archive</strong></a>	
+						
+						<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						
+						<div class="collapse navbar-collapse" id="navbarSupportedContent">
+							<ul class="navbar-nav ml-auto py-4 py-md-0">
+								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4 active">
+									<a class="nav-link" href="{% url "index" %}">Home</a>
+								</li>
+								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+									<a class="nav-link" href="{% url "videos" %}">Videos</a>
+								</li>
+								<li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+									<a class="nav-link" href="{% url "channels" %}">Channels</a>
+								</li>
+							</ul>
+						</div>
+					</nav>		
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="my-4 py-4">
+	</div>
+  <div class="container-fluid">
+    <div class="row">
+    <div class="col-sm-2">
+      {% block sidebar %}
+      <div class="sidebar-nav">
+          <form >
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category" id="video_radio" value="video" onclick="changeScope('video_search','channel_search');" style="background-color:#8167a9;" checked>
+                <label class="form-check-label" for="video_radio">Video</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category" id="channel_radio" value="channel" onclick="changeScope('channel_search','video_search');" style="background-color:#8167a9;">
+                <label class="form-check-label" for="channel_radio">Channel</label>
+              </div>
+            </form>
+            <script type="text/javascript">
+              function changeScope(elemToShow,elemToHide) {
+              document.getElementById(elemToShow).style.display = "block";
+              document.getElementById(elemToHide).style.display = "none";
+              }
+            </script>
+            <form class="form-inline" id="video_search" action="{% url 'video_search_results' %}" method="get" >
+              <input class="form-control" name="q_v" id="v" type="text" placeholder=" Search Video" maxlength="50" size=13>
+              <input type="submit" name="submit" class="btn btn-primary mb-2" value="Search" style="position:relative; top:4px; background-color:#8167a9; border-color:#8167a9; height:38px; width:72px; font-size:14px; text-align:center; line-width:70px;">
+            </form>
+            <form class="form-inline" id="channel_search" action="{% url 'channel_search_results' %}" method="get" style = display:none>
+              <input class="form-control" name="q_c" id="c" type="text" placeholder=" Search Channel" maxlength="50" size=13>
+              <input type="submit" name="submit" class="btn btn-primary mb-2" value="Search"  style="position:relative; top:4px; background-color:#8167a9; border-color:#8167a9; height:38px; width:72px; font-size:14px; text-align:center; line-width:70px;">
+            </form>  
+            </div>
+     {% endblock %}
+      </div>
+      <div class="col-sm-10 ">{% block content %}{% endblock %}
+      {%if is_paginated %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center" >
+        {% if page_obj.has_previous %}
+        <li class="page-item" style="color:#8167a9">
+            <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+        {% endif %}
+
+        {% if page_obj.number|add:'-4' > 1 %}
+            <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page=1">1</a>
+            </li>
+            {% if page_obj.number|add:'-5' > 1 %}
+            <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ page_obj.number|add:'-5' }}">&hellip;</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <li class="page-item active" aria-current="page">
+              <span class="page-link">
+                {{ i }}
+                <span class="sr-only">(current)</span>
+              </span>
+            </li>
+            {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %}
+                 <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+        {% if page_obj.paginator.num_pages > page_obj.number|add:'5'%}
+           <li class="page-item"><a class="page-link" href="{{ request.path }}?page={{ page_obj.number|add:'5' }}">&hellip;</a></li>
+           {% endif %}
+            <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+            </li>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ page_obj.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+            <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+          </li>
+        {% endif %}
+        ​​​​​​​​<form class="form-inline" id="page" method="get">
+            <input style="position:relative; left:10px" class="form-control mb-2 mr-sm-2" name="page" id="skip" type="number" maxlength="5" size=2 placeholder="Skip to..." min="1" max="{{page_obj.paginator.num_pages}}">
+            <label class="form-label" style="position:relative; left:7px; bottom:2px" for="skip">page</label>
+        </form>
+      </ul>
+    </nav>
+    {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
